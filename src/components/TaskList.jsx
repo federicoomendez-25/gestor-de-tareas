@@ -1,39 +1,39 @@
 import { useEffect, useState } from "react";
-import { collection, getDocs } from "firebase/firestore";
+import { ref, onValue } from "firebase/database";
 import { db } from "../firebase";
 import TaskItem from "./TaskItem";
 
-function TaskList({ refresh }) {
+function TaskList() {
   const [tasks, setTasks] = useState([]);
 
-  const getTasks = async () => {
-    const querySnapshot = await getDocs(collection(db, "tasks"));
-    const tasksArray = querySnapshot.docs.map((doc) => ({
-      id: doc.id,
-      ...doc.data(),
-    }));
-    setTasks(tasksArray);
-  };
-
   useEffect(() => {
-    getTasks();
-  }, [refresh]);
+    const tasksRef = ref(db, "tasks");
+
+    const unsubscribe = onValue(tasksRef, (snapshot) => {
+      const data = snapshot.val();
+
+      if (data) {
+        const tasksArray = Object.entries(data).map(([id, value]) => ({
+          id,
+          ...value,
+        }));
+        setTasks(tasksArray);
+      } else {
+        setTasks([]);
+      }
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   return (
     <div>
       <h2>Lista de tareas</h2>
-     {tasks.map((task) => (
-  <TaskItem
-    key={task.id}
-    task={task}
-    onTaskUpdated={getTasks}
-  />
-))}
-
+      {tasks.map((task) => (
+        <TaskItem key={task.id} task={task} />
+      ))}
     </div>
   );
 }
 
 export default TaskList;
-
-

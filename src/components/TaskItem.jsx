@@ -1,66 +1,60 @@
 import { useState } from "react";
-import { doc, deleteDoc, updateDoc } from "firebase/firestore";
+import { ref, remove, update } from "firebase/database";
 import { db } from "../firebase";
 
-function TaskItem({ task, onDelete, onUpdate }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [title, setTitle] = useState(task.title);
-  const [description, setDescription] = useState(task.description);
-  const [difficulty, setDifficulty] = useState(task.difficulty);
+function TaskItem({ task }) {
+  const [editing, setEditing] = useState(false);
+  const [title, setTitle] = useState(task.title || "");
+  const [description, setDescription] = useState(task.description || "");
+  const [difficulty, setDifficulty] = useState(task.difficulty || "Fácil");
 
   const handleDelete = async () => {
-    onDelete(task.id); // UI inmediata
-    await deleteDoc(doc(db, "tasks", task.id));
+    await remove(ref(db, `tasks/${task.id}`));
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-
-    const updatedTask = {
-      ...task,
+  const handleUpdate = async () => {
+    await update(ref(db, `tasks/${task.id}`), {
       title,
       description,
-      difficulty,
-    };
+      difficulty
+    });
+    setEditing(false);
+  };
 
-    onUpdate(updatedTask); // UI inmediata
-    setIsEditing(false);
-
-    await updateDoc(doc(db, "tasks", task.id), {
-      title,
-      description,
-      difficulty,
+  const toggleCompleted = async () => {
+    await update(ref(db, `tasks/${task.id}`), {
+      completed: !task.completed
     });
   };
 
   return (
-    <div style={{ marginBottom: "15px", borderBottom: "1px solid #444" }}>
-      {isEditing ? (
-        <form onSubmit={handleUpdate}>
+    <div style={{ border: "1px solid #555", padding: "1rem", marginBottom: "1rem" }}>
+      {editing ? (
+        <>
           <input value={title} onChange={(e) => setTitle(e.target.value)} />
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-          />
-          <select
-            value={difficulty}
-            onChange={(e) => setDifficulty(e.target.value)}
-          >
-            <option>Fácil</option>
-            <option>Media</option>
-            <option>Difícil</option>
+          <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+          <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
+            <option value="Fácil">Fácil</option>
+            <option value="Media">Media</option>
+            <option value="Difícil">Difícil</option>
           </select>
-          <button type="submit">Guardar</button>
-          <button type="button" onClick={() => setIsEditing(false)}>
-            Cancelar
-          </button>
-        </form>
+          <button onClick={handleUpdate}>Guardar</button>
+          <button onClick={() => setEditing(false)}>Cancelar</button>
+        </>
       ) : (
         <>
-          <h3>{task.title}</h3>
+          <input
+            type="checkbox"
+            checked={!!task.completed}
+            onChange={toggleCompleted}
+          />
+          <h3 style={{ textDecoration: task.completed ? "line-through" : "none" }}>
+            {task.title}
+          </h3>
           <p>{task.description}</p>
-          <p><strong>Dificultad:</strong> {task.difficulty}</p>
-          <button onClick={() => setIsEditing(true)}>Editar</button>
+          <strong>Dificultad: {task.difficulty}</strong>
+          <br />
+          <button onClick={() => setEditing(true)}>Editar</button>
           <button onClick={handleDelete}>Eliminar</button>
         </>
       )}

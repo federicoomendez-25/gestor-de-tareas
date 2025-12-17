@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { collection, addDoc } from "firebase/firestore";
+import { ref, push } from "firebase/database";
 import { db } from "../firebase";
+
 
 function TaskForm({ onTaskAdded }) {
   const [title, setTitle] = useState("");
@@ -10,57 +11,48 @@ function TaskForm({ onTaskAdded }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!title || !description) {
-      alert("Completa todos los campos");
-      return;
-    }
+    await push(ref(db, "tasks"), {
+      title,
+      description,
+      difficulty
+    });
 
-    try {
-      await addDoc(collection(db, "tasks"), {
-        title,
-        description,
-        difficulty,
-        createdAt: new Date()
-      });
-
-      setTitle("");
-      setDescription("");
-      setDifficulty("Fácil");
-
-      onTaskAdded();
-    } catch (error) {
-      console.error("Error al crear tarea:", error);
-    }
+    setTitle("");
+    setDescription("");
+    setDifficulty("Fácil");
+    onTaskAdded();
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <>
       <h2>Nueva Tarea</h2>
+      <form onSubmit={handleSubmit}>
+        <input
+          placeholder="Título"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          required
+        />
 
-      <input
-        type="text"
-        placeholder="Título"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
+        <textarea
+          placeholder="Descripción"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        />
 
-      <textarea
-        placeholder="Descripción"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-      />
+        <select
+          value={difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
+        >
+          <option>Fácil</option>
+          <option>Media</option>
+          <option>Difícil</option>
+        </select>
 
-      <select
-        value={difficulty}
-        onChange={(e) => setDifficulty(e.target.value)}
-      >
-        <option value="Fácil">Fácil</option>
-        <option value="Media">Media</option>
-        <option value="Difícil">Difícil</option>
-      </select>
-
-      <button type="submit">Crear tarea</button>
-    </form>
+        <button>Crear tarea</button>
+      </form>
+    </>
   );
 }
 
