@@ -16,48 +16,70 @@ function TaskItem({ task }) {
     await update(ref(db, `tasks/${task.id}`), {
       title,
       description,
-      difficulty
+      difficulty,
     });
     setEditing(false);
   };
 
   const toggleCompleted = async () => {
     await update(ref(db, `tasks/${task.id}`), {
-      completed: !task.completed
+      completed: !task.completed,
     });
   };
 
-  return (
-    <div style={{ border: "1px solid #555", padding: "1rem", marginBottom: "1rem" }}>
-      {editing ? (
-        <>
-          <input value={title} onChange={(e) => setTitle(e.target.value)} />
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} />
-          <select value={difficulty} onChange={(e) => setDifficulty(e.target.value)}>
-            <option value="Fácil">Fácil</option>
-            <option value="Media">Media</option>
-            <option value="Difícil">Difícil</option>
-          </select>
+  if (editing) {
+    return (
+      <div className="task-item" data-difficulty={difficulty}>
+        <input value={title} onChange={(e) => setTitle(e.target.value)} />
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+        />
+        <select
+          value={difficulty}
+          onChange={(e) => setDifficulty(e.target.value)}
+        >
+          <option value="Fácil">Fácil</option>
+          <option value="Media">Media</option>
+          <option value="Difícil">Difícil</option>
+        </select>
+
+        <div className="task-actions">
           <button onClick={handleUpdate}>Guardar</button>
-          <button onClick={() => setEditing(false)}>Cancelar</button>
-        </>
-      ) : (
-        <>
-          <input
-            type="checkbox"
-            checked={!!task.completed}
-            onChange={toggleCompleted}
-          />
-          <h3 style={{ textDecoration: task.completed ? "line-through" : "none" }}>
-            {task.title}
-          </h3>
-          <p>{task.description}</p>
-          <strong>Dificultad: {task.difficulty}</strong>
-          <br />
+          <button className="danger" onClick={() => setEditing(false)}>
+            Cancelar
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={`task-item ${task.completed ? "completed" : ""}`}
+      data-difficulty={task.difficulty}
+    >
+      <label className="task-check">
+        <input
+          type="checkbox"
+          checked={!!task.completed}
+          onChange={toggleCompleted}
+        />
+        <span className="checkmark"></span>
+      </label>
+
+      <div className="task-content">
+        <h3>{task.title}</h3>
+        <p>{task.description}</p>
+        <small>Dificultad: {task.difficulty}</small>
+
+        <div className="task-actions">
           <button onClick={() => setEditing(true)}>Editar</button>
-          <button onClick={handleDelete}>Eliminar</button>
-        </>
-      )}
+          <button className="danger" onClick={handleDelete}>
+            Eliminar
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

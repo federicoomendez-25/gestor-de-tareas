@@ -1,18 +1,176 @@
-body {
-  background-color: #1e1e1e;
-  color: white;
-  font-family: Arial, sans-serif;
+/* RESET */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
+/* BODY */
+body {
+  background: #0f172a;
+  color: #e5e7eb;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* TITULOS */
+h1, h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+/* FORMULARIO */
+form {
+  background: #020617;
+  padding: 1rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+}
+
+/* INPUTS */
 input,
 textarea,
 select {
   width: 100%;
-  margin-bottom: 0.5rem;
-  padding: 0.4rem;
+  padding: 0.6rem;
+  margin-bottom: 0.7rem;
+  border-radius: 8px;
+  border: none;
+  background: #020617;
+  color: #e5e7eb;
 }
 
+/* BOTONES */
 button {
-  margin-right: 0.5rem;
-  padding: 0.4rem 0.8rem;
+  padding: 0.7rem 1.2rem;
+  border: none;
+  border-radius: 8px;
+  background: #2563eb;
+  color: white;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+button:hover {
+  background: #1d4ed8;
+}
+
+button.danger {
+  background: #dc2626;
+}
+
+button.danger:hover {
+  background: #b91c1c;
+}
+
+/* CONTADOR */
+.task-counter {
+  background: #020617;
+  padding: 0.8rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+}
+
+/* PROGRESS BAR */
+.progress-bar {
+  height: 10px;
+  background: #020617;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #22c55e;
+  transition: width 0.3s ease;
+}
+
+/* FILTRO */
+.filter {
+  margin-bottom: 1rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+}
+
+/* TASK ITEM */
+.task-item {
+  display: flex;
+  gap: 1rem;
+  background: #020617;
+  padding: 1rem;
+  border-radius: 14px;
+  margin-bottom: 1rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.task-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+}
+
+.task-item.completed h3 {
+  text-decoration: line-through;
+  opacity: 0.6;
+}
+
+/* COLORES POR DIFICULTAD */
+.task-item[data-difficulty="Fácil"] {
+  border-left: 6px solid #22c55e;
+}
+
+.task-item[data-difficulty="Media"] {
+  border-left: 6px solid #facc15;
+}
+
+.task-item[data-difficulty="Difícil"] {
+  border-left: 6px solid #ef4444;
+}
+
+/* CHECKBOX */
+.task-check input {
+  display: none;
+}
+
+.checkmark {
+  width: 22px;
+  height: 22px;
+  border: 2px solid #2563eb;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.task-check input:checked + .checkmark {
+  background: #2563eb;
+}
+
+/* CONTENIDO */
+.task-content {
+  flex: 1;
+}
+
+/* BOTONES */
+.task-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 1.5rem;
+}
+
+/* RESPONSIVE */
+@media (max-width: 600px) {
+  .task-counter {
+    flex-direction: column;
+    gap: 0.4rem;
+    text-align: center;
+  }
+
+  .task-item {
+    flex-direction: column;
+  }
+
+  .task-actions {
+    justify-content: space-between;
+  }
 }
