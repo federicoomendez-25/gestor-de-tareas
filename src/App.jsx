@@ -1,17 +1,12 @@
-import { useState } from "react";
 import TaskForm from "./components/TaskForm";
 import TaskList from "./components/TaskList";
 
 function App() {
-  const [refresh, setRefresh] = useState(false);
-
   return (
-    <div style={{ padding: "20px" }}>
+    <div style={{ maxWidth: "600px", margin: "0 auto", padding: "2rem" }}>
       <h1>Gestor de Tareas</h1>
-
-      <TaskForm onTaskAdded={() => setRefresh(!refresh)} />
-
-      <TaskList refresh={refresh} />
+      <TaskForm />
+      <TaskList />
     </div>
   );
 }

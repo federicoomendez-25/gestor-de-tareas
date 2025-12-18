@@ -1,53 +1,70 @@
-/* RESET */
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
-/* BODY */
+/* =====================
+   BASE
+===================== */
 body {
+  margin: 0;
   background: #0f172a;
   color: #e5e7eb;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: system-ui, Arial, sans-serif;
 }
 
-/* TITULOS */
-h1, h2 {
+h1,
+h2 {
   text-align: center;
-  margin-bottom: 1rem;
 }
 
-/* FORMULARIO */
+/* =====================
+   TITULOS MODERNOS
+===================== */
+h1 {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 1.2rem;
+  background: linear-gradient(90deg, #38bdf8, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin: 1.5rem 0 1rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #94a3b8;
+}
+
+/* =====================
+   FORM
+===================== */
 form {
   background: #020617;
   padding: 1rem;
-  border-radius: 12px;
+  border-radius: 10px;
   margin-bottom: 1.5rem;
 }
 
-/* INPUTS */
 input,
 textarea,
 select {
   width: 100%;
   padding: 0.6rem;
   margin-bottom: 0.7rem;
-  border-radius: 8px;
+  border-radius: 6px;
   border: none;
-  background: #020617;
-  color: #e5e7eb;
 }
 
-/* BOTONES */
 button {
-  padding: 0.7rem 1.2rem;
+  padding: 0.5rem 0.9rem;
   border: none;
-  border-radius: 8px;
+  border-radius: 6px;
   background: #2563eb;
   color: white;
   cursor: pointer;
-  font-size: 0.95rem;
 }
 
 button:hover {
@@ -62,53 +79,44 @@ button.danger:hover {
   background: #b91c1c;
 }
 
-/* CONTADOR */
+/* =====================
+   CONTADOR GLOBAL
+===================== */
 .task-counter {
-  background: #020617;
-  padding: 0.8rem;
-  border-radius: 12px;
   display: flex;
-  justify-content: space-around;
-  margin-bottom: 1rem;
+  justify-content: space-between;
+  margin-bottom: 0.6rem;
   font-size: 0.9rem;
 }
 
-/* PROGRESS BAR */
-.progress-bar {
+/* =====================
+   PROGRESO GLOBAL
+===================== */
+.global-progress-bar {
+  width: 100%;
   height: 10px;
-  background: #020617;
-  border-radius: 10px;
-  overflow: hidden;
-  margin-bottom: 1rem;
-}
-
-.progress-fill {
-  height: 100%;
-  background: #22c55e;
-  transition: width 0.3s ease;
-}
-
-/* FILTRO */
-.filter {
-  margin-bottom: 1rem;
-  padding: 0.6rem;
+  background: #1e293b;
   border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
 }
 
-/* TASK ITEM */
+.global-progress {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #2563eb);
+  transition: width 0.4s ease;
+}
+
+/* =====================
+   TASK ITEM
+===================== */
 .task-item {
   display: flex;
   gap: 1rem;
   background: #020617;
   padding: 1rem;
-  border-radius: 14px;
+  border-radius: 12px;
   margin-bottom: 1rem;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.task-item:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
 }
 
 .task-item.completed h3 {
@@ -116,53 +124,91 @@ button.danger:hover {
   opacity: 0.6;
 }
 
-/* COLORES POR DIFICULTAD */
-.task-item[data-difficulty="Fácil"] {
-  border-left: 6px solid #22c55e;
-}
-
-.task-item[data-difficulty="Media"] {
-  border-left: 6px solid #facc15;
-}
-
-.task-item[data-difficulty="Difícil"] {
-  border-left: 6px solid #ef4444;
-}
-
-/* CHECKBOX */
+/* =====================
+   CHECKBOX MODERNO ✓
+===================== */
 .task-check input {
   display: none;
 }
 
 .checkmark {
-  width: 22px;
-  height: 22px;
-  border: 2px solid #2563eb;
-  border-radius: 6px;
+  width: 26px;
+  height: 26px;
+  border: 2px solid #38bdf8;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.25s ease;
+  color: white;
+  font-size: 18px;
 }
 
 .task-check input:checked + .checkmark {
-  background: #2563eb;
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  border-color: #22c55e;
 }
 
-/* CONTENIDO */
+.task-check input:checked + .checkmark::after {
+  content: "✓";
+  font-weight: bold;
+}
+
+/* =====================
+   CONTENT
+===================== */
 .task-content {
   flex: 1;
 }
 
-/* BOTONES */
 .task-actions {
-  margin-top: 1rem;
+  margin-top: 1.5rem;
   display: flex;
   gap: 1.5rem;
 }
 
-/* RESPONSIVE */
+/* =====================
+   DIFICULTAD
+===================== */
+.task-item.easy {
+  border-left: 6px solid #22c55e;
+}
+
+.task-item.medium {
+  border-left: 6px solid #f59e0b;
+}
+
+.task-item.hard {
+  border-left: 6px solid #ef4444;
+}
+
+/* =====================
+   ANIMACION COMPLETAR
+===================== */
+.task-item.completed {
+  animation: completePulse 0.3s ease;
+}
+
+@keyframes completePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.02);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* =====================
+   RESPONSIVE
+===================== */
 @media (max-width: 600px) {
   .task-counter {
     flex-direction: column;
-    gap: 0.4rem;
+    gap: 0.3rem;
     text-align: center;
   }
 
@@ -174,3 +220,23 @@ button.danger:hover {
     justify-content: space-between;
   }
 }
+/* =====================
+   MENSAJE DE PROGRESO
+===================== */
+.progress-message {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #38bdf8;
+  opacity: 0.9;
+}
+.progress-message.high {
+  color: #22c55e;
+}
+.progress-message.medium {
+  color: #f59e0b;
+}
+.progress-message.low {
+  color: #ef4444;
+} 

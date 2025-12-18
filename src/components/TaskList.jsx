@@ -5,64 +5,63 @@ import TaskItem from "./TaskItem";
 
 function TaskList() {
   const [tasks, setTasks] = useState([]);
-  const [filter, setFilter] = useState("Todas");
 
   useEffect(() => {
     const tasksRef = ref(db, "tasks");
 
-    const unsubscribe = onValue(tasksRef, (snapshot) => {
+    onValue(tasksRef, (snapshot) => {
       const data = snapshot.val();
+
       if (data) {
         const tasksArray = Object.entries(data).map(([id, value]) => ({
           id,
-          ...value,
+          ...value
         }));
         setTasks(tasksArray);
       } else {
         setTasks([]);
       }
     });
-
-    return () => unsubscribe();
   }, []);
 
-  const filteredTasks =
-    filter === "Todas"
-      ? tasks
-      : tasks.filter((task) => task.difficulty === filter);
+  const totalTasks = tasks.length;
+  const completedTasks = tasks.filter(task => task.completed).length;
 
-  const completed = tasks.filter((t) => t.completed).length;
-  const progress = tasks.length
-    ? Math.round((completed / tasks.length) * 100)
-    : 0;
+  const progress =
+    totalTasks === 0
+      ? 0
+      : Math.round((completedTasks / totalTasks) * 100);
+
+  const getProgressMessage = () => {
+    if (progress === 0) return "¡Empecemos! Añade tu primera tarea 🚀";
+    if (progress < 50) return "Vas bien, sigue así 💪";
+    if (progress < 100) return `¡Buen trabajo! Ya llevas ${progress}%`;
+    return "🏆 ¡Todas las tareas completadas!";
+  };
 
   return (
     <div>
-      {/* CONTADOR */}
+      <h2>Lista de tareas</h2>
+
       <div className="task-counter">
-        <span>Total: {tasks.length}</span>
-        <span>Completadas: {completed}</span>
+        <span>Total: {totalTasks}</span>
+        <span>Completadas: {completedTasks}</span>
         <span>{progress}% completado</span>
       </div>
 
-      {/* BARRA DE PROGRESO */}
-      <div className="progress-bar">
-        <div className="progress-fill" style={{ width: `${progress}%` }} />
+      <div className="global-progress-bar">
+        <div
+          className="global-progress"
+          style={{ width: `${progress}%` }}
+        />
       </div>
 
-      {/* FILTRO */}
-      <select
-        className="filter"
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-      >
-        <option value="Todas">Todas</option>
-        <option value="Fácil">Fácil</option>
-        <option value="Media">Media</option>
-        <option value="Difícil">Difícil</option>
-      </select>
+      {/*  MENSAJE INTELIGENTE */}
+      <p className="progress-message">
+        {getProgressMessage()}
+      </p>
 
-      {filteredTasks.map((task) => (
+      {tasks.map(task => (
         <TaskItem key={task.id} task={task} />
       ))}
     </div>

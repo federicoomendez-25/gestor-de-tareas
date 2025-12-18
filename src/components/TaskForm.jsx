@@ -2,8 +2,7 @@ import { useState } from "react";
 import { ref, push } from "firebase/database";
 import { db } from "../firebase";
 
-
-function TaskForm({ onTaskAdded }) {
+function TaskForm() {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [difficulty, setDifficulty] = useState("Fácil");
@@ -14,45 +13,42 @@ function TaskForm({ onTaskAdded }) {
     await push(ref(db, "tasks"), {
       title,
       description,
-      difficulty
+      difficulty,
+      completed: false
     });
 
     setTitle("");
     setDescription("");
     setDifficulty("Fácil");
-    onTaskAdded();
   };
 
   return (
-    <>
-      <h2>Nueva Tarea</h2>
-      <form onSubmit={handleSubmit}>
-        <input
-          placeholder="Título"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
+    <form onSubmit={handleSubmit}>
+      <input
+        placeholder="Título"
+        value={title}
+        onChange={(e) => setTitle(e.target.value)}
+        required
+      />
 
-        <textarea
-          placeholder="Descripción"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          required
-        />
+      <textarea
+        placeholder="Descripción"
+        value={description}
+        onChange={(e) => setDescription(e.target.value)}
+        required
+      />
 
-        <select
-          value={difficulty}
-          onChange={(e) => setDifficulty(e.target.value)}
-        >
-          <option>Fácil</option>
-          <option>Media</option>
-          <option>Difícil</option>
-        </select>
+      <select
+        value={difficulty}
+        onChange={(e) => setDifficulty(e.target.value)}
+      >
+        <option value="Fácil">Fácil</option>
+        <option value="Media">Media</option>
+        <option value="Difícil">Difícil</option>
+      </select>
 
-        <button>Crear tarea</button>
-      </form>
-    </>
+      <button type="submit">Crear tarea</button>
+    </form>
   );
 }
 
